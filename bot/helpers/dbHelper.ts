@@ -90,12 +90,12 @@ export const clearChatHistory = async (
   });
 };
 
-export const getChatHistory = async (fromId: string, conversionId: string) => {
+export const getChatHistory = async (fromId: string, conversionId: string, model = 'text-davinci-003') => {
   const conn = await connectToMySql();
   return new Promise<string[]>((resolve, reject) => {
     conn.query(
-      "SELECT message FROM user_chat_history WHERE user_id = ? AND conversion_id = ? ORDER BY id DESC LIMIT 20",
-      [fromId, conversionId],
+      "SELECT message FROM user_chat_history WHERE user_id = ? AND conversion_id = ? AND ai_model = ? ORDER BY id DESC LIMIT 20",
+      [fromId, conversionId, model],
       (error, results) => {
         if (error) {
           reject(error);
@@ -112,13 +112,14 @@ export const getChatHistory = async (fromId: string, conversionId: string) => {
 export const addChatHistory = async (
   fromId: string,
   conversionId: string,
-  message: string
+  message: string,
+  model = 'text-davinci-003'
 ) => {
   const conn = await connectToMySql();
   return new Promise<string[]>((resolve, reject) => {
     conn.query(
-      "INSERT INTO user_chat_history(user_id, conversion_id, message) VALUES(?, ?, ?)",
-      [fromId, conversionId, message],
+      "INSERT INTO user_chat_history(user_id, conversion_id, ai_model, message) VALUES(?, ?, ?, ?)",
+      [fromId, conversionId, model, message],
       (error, results) => {
         if (error) {
           reject(error);
