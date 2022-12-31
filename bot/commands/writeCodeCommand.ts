@@ -21,7 +21,7 @@ export const writeCodeCommand: ICommand = {
       return;
     }
 
-    var response = await getOpenAiResponse(apiKey, instruction);
+    var response = await getOpenAiResponse(apiKey, instruction, { model: 'code-davinci-002' });
 
     for (let choice of response.data.choices) {
         var responseText = choice.text.trim();
@@ -29,7 +29,7 @@ export const writeCodeCommand: ICommand = {
         await context.sendActivity({
           type: "message",
           textFormat: "markdown",
-          text: responseText,
+          text: '```\n' + responseText + '\n```',
         });
       }
   },
