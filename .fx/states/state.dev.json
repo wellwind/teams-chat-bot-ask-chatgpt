@@ -1,0 +1,32 @@
+{
+    "solution": {
+        "provisionSucceeded": true,
+        "teamsAppTenantId": "76275315-7a75-4bad-9b7d-a329d6222150",
+        "subscriptionId": "6aaaac4e-1dcf-494a-ba4e-ed9545cf56af",
+        "subscriptionName": "Visual Studio Enterprise 訂閱",
+        "tenantId": "ea74227c-40ef-4402-bbce-564485994bec",
+        "needCreateResourceGroup": true,
+        "resourceGroupName": "DuotifyTeamsChatbot-AskChatGPT",
+        "location": "Japan East",
+        "resourceNameSuffix": "3612e9"
+    },
+    "fx-resource-appstudio": {
+        "tenantId": "76275315-7a75-4bad-9b7d-a329d6222150",
+        "teamsAppId": "4ce24029-0493-4f24-bc2f-fab198d38069"
+    },
+    "fx-resource-bot": {
+        "botId": "36774536-dcd5-4ec9-a40f-d81e087b22ca",
+        "botPassword": "{{fx-resource-bot.botPassword}}",
+        "skuName": "B1",
+        "siteName": "askchatgpt7cf871bot",
+        "domain": "askchatgpt7cf871bot.azurewebsites.net",
+        "appServicePlanName": "askchatgpt7cf871bot",
+        "resourceId": "/subscriptions/6aaaac4e-1dcf-494a-ba4e-ed9545cf56af/resourceGroups/DuotifyTeamsChatbot-AskChatGPT/providers/Microsoft.Web/sites/askchatgpt7cf871bot",
+        "siteEndpoint": "https://askchatgpt7cf871bot.azurewebsites.net"
+    },
+    "fx-resource-identity": {
+        "identityName": "askchatgpt7cf871",
+        "identityResourceId": "/subscriptions/6aaaac4e-1dcf-494a-ba4e-ed9545cf56af/resourceGroups/DuotifyTeamsChatbot-AskChatGPT/providers/Microsoft.ManagedIdentity/userAssignedIdentities/askchatgpt7cf871",
+        "identityClientId": "f5724513-3256-4869-9e81-041de51f6ccb"
+    }
+}
