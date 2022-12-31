@@ -26,7 +26,7 @@ export const askAiCommand: ICommand = {
     // push human says
     chatHistories.push(`Human: ${message}`);
     // create prompt
-    const prompt = (chatHistories.join("\n") + "\nAI: ").slice(-1024);
+    const prompt = ('以下是和 AI 助理的對話，AI 助理提供友善且詳盡的回答，使用 markdown 語法回覆，如果需要範例程式，會盡可能提供完整的程式碼。' + '\n\n' + chatHistories.join("\n") + "\nAI: ").slice(-1024);
     console.log(prompt);
     // request success
     var response = await getOpenAiResponse(apiKey, prompt);
