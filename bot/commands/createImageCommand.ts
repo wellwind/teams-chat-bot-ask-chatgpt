@@ -3,6 +3,7 @@ import { getOpenAiCompletionResponse } from "../helpers/openAiHelper";
 import { TurnContext } from "botbuilder";
 import { ICommand } from "./ICommand";
 import { checkApiKey } from "../helpers/checkApiKeyHelper";
+import { addChatHistory } from "../helpers/dbHelper";
 
 export const createImageCommand: ICommand = {
   checkCommand: (message: string, context: TurnContext) => {
@@ -40,6 +41,8 @@ export const createImageCommand: ICommand = {
     if (!apiKey) {
       return;
     }
+
+    addChatHistory(fromId, conversationId, `${size}: ${instruction}`, 'create-image');
 
     var response = await getOpenAiImageResponse(apiKey, instruction, size);
 
