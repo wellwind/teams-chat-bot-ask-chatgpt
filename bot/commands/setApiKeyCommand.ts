@@ -4,7 +4,7 @@ import { ICommand } from "./ICommand";
 
 export const setApiKeyCommand: ICommand = {
   checkCommand: (message: string, context: TurnContext) => {
-    return message.startsWith("setApiKey");
+    return message.startsWith("/setApiKey");
   },
   processCommand: async (
     context: TurnContext,
@@ -12,7 +12,7 @@ export const setApiKeyCommand: ICommand = {
     fromId: string,
     conversationId: string
   ) => {
-    const apiKey = message.replace("setApiKey", "").trim();
+    const apiKey = message.replace("/setApiKey", "").trim();
     setApiKey(fromId, apiKey);
     await context.sendActivity({
       type: "message",

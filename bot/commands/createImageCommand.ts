@@ -6,7 +6,7 @@ import { checkApiKey } from "../helpers/checkApiKeyHelper";
 
 export const createImageCommand: ICommand = {
   checkCommand: (message: string, context: TurnContext) => {
-    return message.startsWith("createImage");
+    return message.startsWith("/createImage ") || message.startsWith("/image ");
   },
   processCommand: async (
     context: TurnContext,
@@ -14,7 +14,7 @@ export const createImageCommand: ICommand = {
     fromId: string,
     conversationId: string
   ) => {
-    const command = message.replace("createImage", "").trim();
+    const command = message.replace("/createImage", "").replace("/image ", "").trim();
     const size = command.split(" ")[0];
     const instruction = command.split(" ").slice(1).join(" ");
 

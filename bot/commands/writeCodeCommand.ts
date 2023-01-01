@@ -5,7 +5,7 @@ import { checkApiKey } from "../helpers/checkApiKeyHelper";
 
 export const writeCodeCommand: ICommand = {
   checkCommand: (message: string, context: TurnContext) => {
-    return message.startsWith("writeCode");
+    return message.startsWith("/writeCode ");
   },
   processCommand: async (
     context: TurnContext,
@@ -13,7 +13,7 @@ export const writeCodeCommand: ICommand = {
     fromId: string,
     conversationId: string
   ) => {
-    const instruction = message.replace("writeCode", "").trim();
+    const instruction = message.replace("/writeCode ", "").trim();
 
     const apiKey = await checkApiKey(context, fromId);
     if(!apiKey) {

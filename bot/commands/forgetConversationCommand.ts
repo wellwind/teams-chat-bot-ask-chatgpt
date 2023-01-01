@@ -4,7 +4,7 @@ import { ICommand } from "./ICommand";
 
 export const forgetConversationCommand: ICommand = {
   checkCommand: (message: string, context: TurnContext) => {
-    return message === "forgetConversation";
+    return message.trim() === "/forgetConversation";
   },
   processCommand: async (
     context: TurnContext,

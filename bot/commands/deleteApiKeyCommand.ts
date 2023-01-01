@@ -4,7 +4,7 @@ import { ICommand } from "./ICommand";
 
 export const deleteApiKeyCommand: ICommand = {
   checkCommand: (message: string, context: TurnContext) => {
-    return message === "deleteApiKey";
+    return message.trim() === "/deleteApiKey";
   },
   processCommand: async (
     context: TurnContext,

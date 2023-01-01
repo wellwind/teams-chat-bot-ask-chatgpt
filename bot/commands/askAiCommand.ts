@@ -7,7 +7,7 @@ import { ICommand } from "./ICommand";
 export const askAiCommand: ICommand = {
   checkCommand: (message: string, context: TurnContext) => {
     if (context.activity.channelId === "line") {
-      return message.startsWith("askChatGPT");
+      return message.startsWith("/askChatGPT ");
     }
     return true;
   },
@@ -19,7 +19,7 @@ export const askAiCommand: ICommand = {
   ) => {
     let askQuestion = "";
     if (context.activity.channelId === "line") {
-      askQuestion = message.replace("askChatGPT", "").trim();
+      askQuestion = message.replace("/askChatGPT ", "").trim();
     } else {
       askQuestion = message;
     }
