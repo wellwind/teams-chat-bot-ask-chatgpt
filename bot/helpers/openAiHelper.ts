@@ -1,7 +1,7 @@
 
 const { Configuration, OpenAIApi } = require("openai");
 
-export const getOpenAiResponse = async (apiKey: string, prompt: string, config?: any) => {
+export const getOpenAiCompletionResponse = async (apiKey: string, prompt: string, config?: any) => {
   const apiConfig = {
     ...{
       model: 'text-davinci-003',
@@ -19,3 +19,16 @@ export const getOpenAiResponse = async (apiKey: string, prompt: string, config?:
 
   return await openai.createCompletion(apiConfig);
 };
+
+export const getOpenAiImageResponse = async (apiKey: string, prompt:string, size: string) => {
+  const configuration = new Configuration({
+    apiKey: apiKey,
+  });
+  const openai = new OpenAIApi(configuration);
+
+  return await openai.createImage({
+    prompt,
+    n: 1,
+    size: `${size}x${size}`
+  });
+}

@@ -1,7 +1,7 @@
 import { TurnContext } from "botbuilder";
 import { checkApiKey } from "../helpers/checkApiKeyHelper";
 import { addChatHistory, getChatHistory } from "../helpers/dbHelper";
-import { getOpenAiResponse } from "../helpers/openAiHelper";
+import { getOpenAiCompletionResponse } from "../helpers/openAiHelper";
 import { ICommand } from "./ICommand";
 
 export const askAiCommand: ICommand = {
@@ -35,13 +35,13 @@ export const askAiCommand: ICommand = {
     // push human says
     chatHistories.push(`Human: ${askQuestion}`);
     // create prompt
-    var instruction =
+    const instruction =
       "以下是和 AI 助理的對話，AI 助理提供友善且詳盡的回答，使用 markdown 語法回覆，如果需要範例程式，會盡可能提供完整的程式碼。\n\n";
     const prompt = (chatHistories.join("\n") + "\nAI:")
       .slice(-1024 + instruction.length);
 
     // request success
-    var response = await getOpenAiResponse(apiKey, `${instruction}${prompt}`, {
+    const response = await getOpenAiCompletionResponse(apiKey, `${instruction}${prompt}`, {
       presence_penalty: 0.6,
       stop: ["Human:", "AI:"],
     });
@@ -50,7 +50,7 @@ export const askAiCommand: ICommand = {
     await addChatHistory(fromId, conversationId, `Human: ${message}`);
 
     for (let choice of response.data.choices) {
-      var responseText = choice.text.trim();
+      const responseText = choice.text.trim();
       // add ai says to history
       await addChatHistory(fromId, conversationId, `AI: ${responseText}`);
       // send activity

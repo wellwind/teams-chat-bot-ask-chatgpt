@@ -1,9 +1,10 @@
-import { helpCommand } from "./commands/helpCommand";
 import { TeamsActivityHandler, TurnContext } from "botbuilder";
-import { setApiKeyCommand } from "./commands/setApiKeyCommand";
+import { askAiCommand } from "./commands/askAiCommand";
+import { createImageCommand } from "./commands/createImageCommand";
 import { deleteApiKeyCommand } from "./commands/deleteApiKeyCommand";
 import { forgetConversationCommand } from "./commands/forgetConversationCommand";
-import { askAiCommand } from "./commands/askAiCommand";
+import { helpCommand } from "./commands/helpCommand";
+import { setApiKeyCommand } from "./commands/setApiKeyCommand";
 import { writeCodeCommand } from "./commands/writeCodeCommand";
 
 export class TeamsBot extends TeamsActivityHandler {
@@ -26,6 +27,7 @@ export class TeamsBot extends TeamsActivityHandler {
         deleteApiKeyCommand,
         forgetConversationCommand,
         writeCodeCommand,
+        createImageCommand,
         askAiCommand,
       ];
 

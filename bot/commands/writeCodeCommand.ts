@@ -1,5 +1,4 @@
-import { getOpenAiResponse } from './../helpers/openAiHelper';
-import { setApiKey } from "./../helpers/dbHelper";
+import { getOpenAiCompletionResponse } from './../helpers/openAiHelper';
 import { TurnContext } from "botbuilder";
 import { ICommand } from "./ICommand";
 import { checkApiKey } from "../helpers/checkApiKeyHelper";
@@ -14,17 +13,17 @@ export const writeCodeCommand: ICommand = {
     fromId: string,
     conversationId: string
   ) => {
-    var instruction = message.replace("writeCode", "").trim();
+    const instruction = message.replace("writeCode", "").trim();
 
     const apiKey = await checkApiKey(context, fromId);
     if(!apiKey) {
       return;
     }
 
-    var response = await getOpenAiResponse(apiKey, instruction, { model: 'code-davinci-002' });
+    const response = await getOpenAiCompletionResponse(apiKey, instruction, { model: 'code-davinci-002' });
 
     for (let choice of response.data.choices) {
-        var responseText = choice.text.trim();
+        const responseText = choice.text.trim();
         // send activity
         await context.sendActivity({
           type: "message",
