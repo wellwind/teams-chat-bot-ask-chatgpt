@@ -1,9 +1,11 @@
 import { Connection, createConnection } from "mysql";
 
 export const connectToMySql = async () => {
+  const mysqlPort = process.env.WEBSITE_MYSQL_PORT || process.env.MYSQL_PORT;
+
   const connection = createConnection({
     host: process.env.MYSQL_HOST,
-    port: +process.env.MYSQL_PORT,
+    port: +mysqlPort,
     user: process.env.MYSQL_USER_ID,
     password: process.env.MYSQL_USER_PASSWORD,
     database: process.env.MYSQL_DB,
