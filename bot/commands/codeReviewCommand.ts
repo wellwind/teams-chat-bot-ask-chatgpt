@@ -3,23 +3,23 @@ import { TurnContext } from "botbuilder";
 import { checkCanCodeReview } from "../helpers/getCodeReviewSetting";
 import { ICommand } from "./ICommand";
 
-const promptTemplate = `Please ignore all previous instructions. From now on, communicate only in Traditional Chinese. Act as an expert in "[[CODE_LANG]]" who can fluently speak and write in Traditional Chinese and markdown. Review the below-mentioned "[[CODE_LANG]]" code and provide some suggestions in Traditional Chinese language with regards to better readability, performance, and security, or any other recommends. If there are any recommendation, kindly provide the sample code.
+const promptTemplate = `從現在起，以流暢的繁體中文進行對話。請你扮演 "[[CODE_LANG]]" 領域的專家，你能以流暢的繁體中文溝通，並且熟練使用 markdown 語法回覆。
+請你 review 以下 "[[CODE_LANG]]" 程式碼，並針對程式碼的可讀性、效能、安全性或其他問題提供一些建議，如果有任何建議，請提供範例程式碼。
 
 [[CODE]]`;
 
-const promptTemplateForPM = `Please ignore all previous instructions. From now on, communicate only in Traditional Chinese. Act as a Project Management expert who can fluently speak and write in Traditional Chinese and markdown. Answer below-mentioned Project Management question in Traditional Chinese:
+const promptTemplateForPM = `從現在起，以流暢的繁體中文進行對話。請你扮演 "專案管理、企劃文案和系統分析" 領域的專家，你能以流暢的繁體中文溝通，並且熟練使用 markdown 語法回覆。
+請你針對以下 "專案管理、企劃文案和系統分析" 等問題，以流暢的繁體中文提供建議。
 
 [[QUESTION]]`;
 
-const promptTemplateForTranslateTC = `Please ignore all previous instructions. From now on, communicate only in Traditional Chinese. Act as a translator who can fluently speak and write in Traditional Chinese and markdown. Translate the below-mentioned English into Traditional Chinese.
+const promptTemplateForTranslateTC = `從現在開始，請只使用繁體中文進行溝通。請假設你是能夠熟練地使用繁體中文和 Markdown 的翻譯人員，將下面的英文翻譯成繁體中文。
 
 [[CONTENT]]`;
 
 const promptTemplateForTranslateEN = `Please ignore all previous instructions. From now on, communicate only in English. Act as a translator who can fluently speak and write in English and markdown. Translate the below-mentioned Traditional Chinese into English.
 
 [[CONTENT]]`;
-
-const promptTemplateFreeStyle = "[[CONTENT]]";
 
 export const codeReviewCommand: ICommand = {
   checkCommand: (message: string, context: TurnContext) => {
