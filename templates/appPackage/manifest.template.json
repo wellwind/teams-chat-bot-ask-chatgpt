@@ -23,6 +23,20 @@
         "full": "{{config.manifest.description.full}}"
     },
     "accentColor": "#FFFFFF",
+    "authorization": {
+        "permissions": {
+            "resourceSpecific": [
+                {
+                    "type": "Application",
+                    "name": "ChannelMessage.Read.Group"
+                },
+                {
+                    "type": "Application",
+                    "name": "ChatMessage.Read.Chat"
+                }
+            ]
+        }
+    },
     "bots": [
         {
             "botId": "{{state.fx-resource-bot.botId}}",
