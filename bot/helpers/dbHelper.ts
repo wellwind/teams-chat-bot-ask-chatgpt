@@ -157,14 +157,16 @@ export const addChatHistory = async (
  */
 export const addDuotifyAskChatGPTHistory = async (
   fromId: string,
+  fromName: string,
   conversionId: string,
+  conversationType: string,
   message: string
 ) => {
   const conn = await connectToMySql();
   return new Promise<string[]>((resolve, reject) => {
     conn.query(
-      "INSERT INTO user_chat_history(user_id, conversion_id, message) VALUES(?, ?, ?)",
-      [fromId, conversionId, message],
+      "INSERT INTO duotify_ask_chatgpt_history(user_id, user_name, conversion_id, conversation_type, message) VALUES(?, ?, ?, ?, ?)",
+      [fromId, fromName, conversionId, conversationType, message],
       (error, results) => {
         if (error) {
           reject(error);

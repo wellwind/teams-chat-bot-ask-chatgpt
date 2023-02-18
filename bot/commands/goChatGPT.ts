@@ -1,4 +1,4 @@
-import { addDuotifyAskChatGPTHistory } from './../helpers/dbHelper';
+import { addDuotifyAskChatGPTHistory } from "./../helpers/dbHelper";
 import { getGoChatGPTSetting } from "../helpers/goChatGPTSetting";
 import { TurnContext } from "botbuilder";
 import { checkCanGoChatGPT } from "../helpers/goChatGPTSetting";
@@ -21,6 +21,10 @@ const promptTemplateForTranslateTC = `從現在開始，請只使用繁體中文
 const promptTemplateForTranslateEN = `Please ignore all previous instructions. From now on, communicate only in English. Act as a translator who can fluently speak and write in English and markdown. Translate the below-mentioned Traditional Chinese into English.
 
 [[CONTENT]]`;
+
+const promptTemplateFor5YO = `請用 5 歲小孩都能理解的方式回答下面的問題：
+
+[[QUESTION]]`;
 
 export const goChatGPTCommand: ICommand = {
   checkCommand: (message: string, context: TurnContext) => {
@@ -63,6 +67,9 @@ export const goChatGPTCommand: ICommand = {
     } else if (goChatGPTSetting.conversationType === "Project Management") {
       // PM 的問題
       prompt = promptTemplateForPM.replace(/\[\[QUESTION\]\]/g, message);
+    } else if (goChatGPTSetting.conversationType === "5YO") {
+      // 5 歲小孩
+      prompt = promptTemplateFor5YO.replace(/\[\[QUESTION\]\]/g, message);
     } else {
       // 其他語言的 Code Review
       prompt = promptTemplate
@@ -80,6 +87,12 @@ export const goChatGPTCommand: ICommand = {
       text: `請 [點擊連結](${url})，稍後 ChatGPT 將為您解答。`,
     });
 
-    addDuotifyAskChatGPTHistory(fromId, conversationId, message);
+    await addDuotifyAskChatGPTHistory(
+      fromId,
+      context.activity.from.name,
+      conversationId,
+      goChatGPTSetting.conversationType,
+      message
+    );
   },
 };
