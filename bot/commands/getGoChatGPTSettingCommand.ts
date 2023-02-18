@@ -1,9 +1,9 @@
 import { TurnContext } from "botbuilder";
 import { ICommand } from "./ICommand";
 
-export const getCodeReviewSettingCommand: ICommand = {
+export const getGoChatGPTSettingCommand: ICommand = {
   checkCommand: (message: string, context: TurnContext) => {
-    return message.startsWith("/getCodeReviewSetting");
+    return message.startsWith("/getGoChatGPTSetting");
   },
   processCommand: async (
     context: TurnContext,
@@ -16,7 +16,7 @@ export const getCodeReviewSettingCommand: ICommand = {
       textFormat: "markdown",
       text: `
 \`\`\`json
-${process.env.CODE_REVIEW_SETTING}
+${process.env.GO_CHATGPT_SETTING}
 \`\`\`
       `,
     });

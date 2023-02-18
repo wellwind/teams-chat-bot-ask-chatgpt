@@ -1,6 +1,7 @@
-import { getCodeReviewSetting } from "./../helpers/getCodeReviewSetting";
+import { addDuotifyAskChatGPTHistory } from './../helpers/dbHelper';
+import { getGoChatGPTSetting } from "../helpers/goChatGPTSetting";
 import { TurnContext } from "botbuilder";
-import { checkCanCodeReview } from "../helpers/getCodeReviewSetting";
+import { checkCanGoChatGPT } from "../helpers/goChatGPTSetting";
 import { ICommand } from "./ICommand";
 
 const promptTemplate = `從現在起，以流暢的繁體中文進行對話。請你扮演 "[[CODE_LANG]]" 領域的專家，你能以流暢的繁體中文溝通，並且熟練使用 markdown 語法回覆。
@@ -21,10 +22,10 @@ const promptTemplateForTranslateEN = `Please ignore all previous instructions. F
 
 [[CONTENT]]`;
 
-export const codeReviewCommand: ICommand = {
+export const goChatGPTCommand: ICommand = {
   checkCommand: (message: string, context: TurnContext) => {
     const conversationId = context.activity.conversation.id;
-    return checkCanCodeReview(conversationId);
+    return checkCanGoChatGPT(conversationId);
   },
   processCommand: async (
     context: TurnContext,
@@ -32,40 +33,40 @@ export const codeReviewCommand: ICommand = {
     fromId: string,
     conversationId: string
   ) => {
-    const canCodeReview = checkCanCodeReview(conversationId);
-    if (!canCodeReview) {
+    const canGoChatGPT = checkCanGoChatGPT(conversationId);
+    if (!canGoChatGPT) {
       await context.sendActivity({
         type: "message",
         textFormat: "plain",
-        text: "此頻道不接受 Code Review",
+        text: "此頻道不接受導向 ChatGPT",
       });
       return;
     }
 
-    const codeReviewSetting = getCodeReviewSetting(conversationId);
+    const goChatGPTSetting = getGoChatGPTSetting(conversationId);
     let prompt = "";
-    if (codeReviewSetting.language === "Free Style") {
+    if (goChatGPTSetting.conversationType === "Free Style") {
       // 自由發揮
       prompt = message;
-    } else if (codeReviewSetting.language === "TranslateTC") {
+    } else if (goChatGPTSetting.conversationType === "TranslateTC") {
       // 翻譯成中文
       prompt = promptTemplateForTranslateTC.replace(
         /\[\[CONTENT\]\]/g,
         message
       );
-    } else if (codeReviewSetting.language === "TranslateEN") {
+    } else if (goChatGPTSetting.conversationType === "TranslateEN") {
       // 翻譯成英文
       prompt = promptTemplateForTranslateEN.replace(
         /\[\[CONTENT\]\]/g,
         message
       );
-    } else if (codeReviewSetting.language === "Project Management") {
+    } else if (goChatGPTSetting.conversationType === "Project Management") {
       // PM 的問題
       prompt = promptTemplateForPM.replace(/\[\[QUESTION\]\]/g, message);
     } else {
       // 其他語言的 Code Review
       prompt = promptTemplate
-        .replace(/\[\[CODE_LANG\]\]/g, codeReviewSetting.language)
+        .replace(/\[\[CODE_LANG\]\]/g, goChatGPTSetting.conversationType)
         .replace(/\[\[CODE\]\]/g, message);
     }
 
@@ -78,5 +79,7 @@ export const codeReviewCommand: ICommand = {
       textFormat: "markdown",
       text: `請 [點擊連結](${url})，稍後 ChatGPT 將為您解答。`,
     });
+
+    addDuotifyAskChatGPTHistory(fromId, conversationId, message);
   },
 };

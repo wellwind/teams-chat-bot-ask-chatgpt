@@ -1,10 +1,10 @@
 import { TurnContext } from "botbuilder";
-import { checkCanCodeReview } from "../helpers/getCodeReviewSetting";
+import { checkCanGoChatGPT } from "../helpers/goChatGPTSetting";
 import { ICommand } from "./ICommand";
 
-export const canCodeReviewCommand: ICommand = {
+export const canGoChatGPTCommand: ICommand = {
   checkCommand: (message: string, context: TurnContext) => {
-    return message.startsWith("/canCodeReview");
+    return message.startsWith("/canGoChatGPT");
   },
   processCommand: async (
     context: TurnContext,
@@ -12,12 +12,12 @@ export const canCodeReviewCommand: ICommand = {
     fromId: string,
     conversationId: string
   ) => {
-    const canCodeReview = checkCanCodeReview(conversationId);
+    const canGoChatGPT = checkCanGoChatGPT(conversationId);
     
     await context.sendActivity({
       type: "message",
       textFormat: "plain",
-      text: `${canCodeReview}`,
+      text: `${canGoChatGPT}`,
     });
   },
 };

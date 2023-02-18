@@ -1,5 +1,8 @@
 import { Connection, createConnection } from "mysql";
 
+/**
+ * Connect to MySQL
+ */
 export const connectToMySql = async () => {
   const mysqlPort = process.env.WEBSITE_MYSQL_PORT || process.env.MYSQL_PORT;
 
@@ -21,6 +24,9 @@ export const connectToMySql = async () => {
   });
 };
 
+/**
+ * set OpenAI api key
+ */
 export const setApiKey = async (fromId: string, apiKey: string) => {
   const conn = await connectToMySql();
   return new Promise((resolve, reject) => {
@@ -38,6 +44,9 @@ export const setApiKey = async (fromId: string, apiKey: string) => {
   });
 };
 
+/**
+ * delete OpenAI api key
+ */
 export const deleteApiKey = async (fromId: string) => {
   const conn = await connectToMySql();
   return new Promise((resolve, reject) => {
@@ -55,6 +64,9 @@ export const deleteApiKey = async (fromId: string) => {
   });
 };
 
+/**
+ * get OpenAI api key
+ */
 export const getApiKey = async (fromId: string) => {
   const conn = await connectToMySql();
   return new Promise<{ api_key: string }[]>((resolve, reject) => {
@@ -92,7 +104,11 @@ export const clearChatHistory = async (
   });
 };
 
-export const getChatHistory = async (fromId: string, conversionId: string, model = 'text-davinci-003') => {
+export const getChatHistory = async (
+  fromId: string,
+  conversionId: string,
+  model = "text-davinci-003"
+) => {
   const conn = await connectToMySql();
   return new Promise<string[]>((resolve, reject) => {
     conn.query(
@@ -111,17 +127,44 @@ export const getChatHistory = async (fromId: string, conversionId: string, model
   });
 };
 
+/**
+ * add chat history
+ */
 export const addChatHistory = async (
   fromId: string,
   conversionId: string,
   message: string,
-  model = 'text-davinci-003'
+  model = "text-davinci-003"
 ) => {
   const conn = await connectToMySql();
   return new Promise<string[]>((resolve, reject) => {
     conn.query(
       "INSERT INTO user_chat_history(user_id, conversion_id, ai_model, message) VALUES(?, ?, ?, ?)",
       [fromId, conversionId, model, message],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      }
+    );
+  });
+};
+
+/**
+ * add Duotify AskChatGPT history
+ */
+export const addDuotifyAskChatGPTHistory = async (
+  fromId: string,
+  conversionId: string,
+  message: string
+) => {
+  const conn = await connectToMySql();
+  return new Promise<string[]>((resolve, reject) => {
+    conn.query(
+      "INSERT INTO user_chat_history(user_id, conversion_id, message) VALUES(?, ?, ?)",
+      [fromId, conversionId, message],
       (error, results) => {
         if (error) {
           reject(error);

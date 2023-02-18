@@ -1,11 +1,11 @@
 import { TeamsActivityHandler, TurnContext } from "botbuilder";
 import { askAiCommand } from "./commands/askAiCommand";
-import { canCodeReviewCommand } from './commands/canCodeReview';
-import { codeReviewCommand } from './commands/codeReviewCommand';
+import { canGoChatGPTCommand } from './commands/canGoChatGPTCommand';
+import { goChatGPTCommand } from './commands/goChatGPT';
 import { createImageCommand } from "./commands/createImageCommand";
 import { deleteApiKeyCommand } from "./commands/deleteApiKeyCommand";
 import { forgetConversationCommand } from "./commands/forgetConversationCommand";
-import { getCodeReviewSettingCommand } from "./commands/getCodeReviewSettingCommand";
+import { getGoChatGPTSettingCommand } from "./commands/getGoChatGPTSettingCommand";
 import { getConversationIdCommand } from "./commands/getConversationIdCommand";
 import { helpCommand } from "./commands/helpCommand";
 import { setApiKeyCommand } from "./commands/setApiKeyCommand";
@@ -33,9 +33,9 @@ export class TeamsBot extends TeamsActivityHandler {
         writeCodeCommand,
         createImageCommand,
         getConversationIdCommand,
-        getCodeReviewSettingCommand,
-        canCodeReviewCommand,
-        codeReviewCommand,
+        getGoChatGPTSettingCommand,
+        canGoChatGPTCommand,
+        goChatGPTCommand,
         askAiCommand,
       ];
 
