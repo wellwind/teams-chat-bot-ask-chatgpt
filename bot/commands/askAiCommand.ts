@@ -1,7 +1,8 @@
 import { TurnContext } from "botbuilder";
+import { ChatCompletionRequestMessageRoleEnum } from "openai";
 import { checkApiKey } from "../helpers/checkApiKeyHelper";
 import { addChatHistory, getChatHistory } from "../helpers/dbHelper";
-import { getOpenAiCompletionResponse } from "../helpers/openAiHelper";
+import { getChatCompletionResponse } from "../helpers/openAiHelper";
 import { ICommand } from "./ICommand";
 
 export const askAiCommand: ICommand = {
@@ -30,29 +31,33 @@ export const askAiCommand: ICommand = {
     }
 
     // get last history list
-    const chatHistories = await getChatHistory(fromId, conversationId);
+    const basicInstruction = {
+      role: ChatCompletionRequestMessageRoleEnum.System,
+      content:
+        "請你扮演一個專業且知識淵博的 AI 助理，提供友善且詳盡的回答，懂得使用 markdown 語法，並且一律使用流暢的繁體中文回覆，如果需要範例程式，會盡可能提供完整的程式碼。",
+    };
+    const chatHistories = (await getChatHistory(fromId, conversationId)).map(text => ({
+      role: text.startsWith('AI:') ? ChatCompletionRequestMessageRoleEnum.Assistant : ChatCompletionRequestMessageRoleEnum.User,
+      content: text.startsWith('AI:') ? text.replace('AI:', '').trim() : text.replace('Human:', '').trim()
+    }));
 
-    // push human says
-    chatHistories.push(`Human: ${askQuestion}`);
-    // create prompt
-    const instruction =
-      "以下是和 AI 助理的對話，AI 助理提供友善且詳盡的回答，使用 markdown 語法回覆，如果需要範例程式，會盡可能提供完整的程式碼。\n\n";
-    const prompt = (chatHistories.join("\n") + "\nAI:")
-      .slice(-1000 + instruction.length);
+    const messages = [
+      basicInstruction,
+      ...chatHistories,
+      { role: ChatCompletionRequestMessageRoleEnum.User, content: askQuestion },
+    ];
 
     // request success
-    const response = await getOpenAiCompletionResponse(apiKey, `${instruction}${prompt}`, {
-      presence_penalty: 0.6,
-      stop: ["Human:", "AI:"],
-    });
+    const response = await getChatCompletionResponse(apiKey, messages);
 
     // add human says to history
-    await addChatHistory(fromId, conversationId, `Human: ${message}`);
+    await addChatHistory(fromId, conversationId, `Human:${askQuestion}`);
 
     for (let choice of response.data.choices) {
-      const responseText = choice.text.trim();
+      const responseText = choice.message.content.trim();
       // add ai says to history
-      await addChatHistory(fromId, conversationId, `AI: ${responseText}`);
+      await addChatHistory(fromId, conversationId, `AI:${responseText}`);
+
       // send activity
       await context.sendActivity({
         type: "message",
@@ -60,5 +65,13 @@ export const askAiCommand: ICommand = {
         text: responseText,
       });
     }
+
+    await context.sendActivity({
+      type: "message",
+      textFormat: "markdown",
+      text: `對話已使用 ${response.data.usage.total_tokens} tokens (送出：${response.data.usage.prompt_tokens};回答：${response.data.usage.completion_tokens})
+      
+注意：超過 4096 tokens 將無法繼續對話，需要使用 /forgetConversation 忘記過去對話`,
+    });
   },
 };
